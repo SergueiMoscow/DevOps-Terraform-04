@@ -18,50 +18,63 @@ resource "yandex_vpc_subnet" "develop_b" {
   v4_cidr_blocks = ["10.0.2.0/24"]
 }
 
-
-module "test-vm" {
-  source         = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
-  env_name       = "develop" 
-  network_id     = yandex_vpc_network.develop.id
-  subnet_zones   = ["ru-central1-a","ru-central1-b"]
-  subnet_ids     = [yandex_vpc_subnet.develop_a.id,yandex_vpc_subnet.develop_b.id]
-  instance_name  = "webs"
-  instance_count = 2
-  image_family   = "ubuntu-2004-lts"
-  public_ip      = true
-
-  labels = { 
-    owner= "i.ivanov",
-    project = "accounting"
-     }
-
-  metadata = {
-    user-data          = data.template_file.cloudinit.rendered #Для демонстрации №3
-    serial-port-enable = 1
-  }
-
+# Добавляем переменные
+variable "subnet_zones_marketing" {
+  type        = list(string)
+  default     = ["ru-central1-a", "ru-central1-b"]
+  description = "https://cloud.yandex.ru/docs/overview/concepts/geo-scope"
 }
 
-module "example-vm" {
+# variable "instance_params" {
+#   type = list(object({
+#     project_name   = string
+#     labels         = map(string)
+#     instance_count = number
+#     subnet_zones   = list(string)
+#     subnet_ids     = list(string)
+#   }))
+# }
+
+module "vm_instances" {
+  for_each = { for idx, instance in local.instance_params : idx => instance }
   source         = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
-  env_name       = "stage"
+  env_name       = each.value.project_name 
   network_id     = yandex_vpc_network.develop.id
-  subnet_zones   = ["ru-central1-a"]
-  subnet_ids     = [yandex_vpc_subnet.develop_a.id]
-  instance_name  = "web-stage"
-  instance_count = 1
-  image_family   = "ubuntu-2004-lts"
+  subnet_zones   = each.value.subnet_zones
+  subnet_ids     = each.value.subnet_ids
+  instance_name  = each.value.project_name
+  instance_count = each.value.instance_count
+  image_family   = var.image_family
   public_ip      = true
-
-  metadata = {
-    user-data          = data.template_file.cloudinit.rendered #Для демонстрации №3
-    serial-port-enable = 1
-  }
-
+  labels = each.value.labels
+  metadata = local.vm_metadata
 }
 
 #Пример передачи cloud-config в ВМ для демонстрации №3
 data "template_file" "cloudinit" {
   template = file("./cloud-init.yml")
+
+  vars = {
+    username           = var.vms_ssh_user
+    ssh_public_key     = file(var.ssh_public_key_file)
+  }
 }
 
+locals {
+  instance_params = [
+    {
+      project_name   = "marketing"
+      labels         = { owner = "i.ivanov", project = "marketing" }
+      instance_count = 1
+      subnet_zones   = var.subnet_zones_marketing
+      subnet_ids     = [yandex_vpc_subnet.develop_a.id, yandex_vpc_subnet.develop_b.id]
+    },
+    {
+      project_name   = "analytics"
+      labels         = { owner = "p.petrov", project = "analytics" }
+      instance_count = 1
+      subnet_zones   = var.subnet_zones_marketing
+      subnet_ids     = [yandex_vpc_subnet.develop_a.id]
+    }
+  ]
+}

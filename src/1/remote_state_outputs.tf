@@ -1,4 +1,3 @@
 output "out" {
-
-    value=concat(module.test-vm.fqdn , module.example-vm.fqdn)
+    value=flatten([for instance in module.vm_instances : instance.fqdn])
 }
