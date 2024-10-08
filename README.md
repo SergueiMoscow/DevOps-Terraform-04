@@ -64,3 +64,95 @@
 
 Из консоли `module.vpc_dev`  
 ![console](images/image17.png)
+
+[Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/f76ea5e88c71e825f3761bb618e42a6c185b5c10)
+
+## [Задание 3](tasks/task3.md)
+`terraform state list`  
+```
+data.template_file.cloudinit
+yandex_vpc_subnet.develop_b
+module.vm_instances["0"].data.yandex_compute_image.my_image
+module.vm_instances["0"].yandex_compute_instance.vm[0]
+module.vm_instances["1"].data.yandex_compute_image.my_image
+module.vm_instances["1"].yandex_compute_instance.vm[0]
+module.vpc_dev.yandex_vpc_network.this
+module.vpc_dev.yandex_vpc_subnet.this
+```
+
+![state list](images/image18.png)
+
+`terraform state rm module.vpc_dev`  
+![rm module vpc_dev](images/image19.png)
+
+`terraform state rm module.vm_instances`  
+![rm module vm_instances](images/image20.png)
+
+`terraform state import module.vpc_dev.yandex_vpc_network.this <id>`  
+![import module vpc_dev network](images/image21.png)
+
+`terraform import module.vpc_dev.yandex_vpc_subnet.this <id>`  
+![import module vpc_dev subnet](images/image22.png)
+
+`terraform import module.vm_instances[\"0\"].yandex_compute_instance.vm[0] fhm9dnimtu3gs697k2bt`  
+![import](images/image23.png)
+
+Выполняем:
+```
+terraform state list
+terraform import module.vm_instances[\"1\"].yandex_compute_instance.vm[0] fhmq3j09ct7l3sf45f8t
+terraform state list
+```  
+![import](images/image24.png)
+
+```
+data.template_file.cloudinit
+yandex_vpc_subnet.develop_b
+module.vm_instances["0"].data.yandex_compute_image.my_image
+module.vm_instances["0"].yandex_compute_instance.vm[0]
+module.vm_instances["1"].data.yandex_compute_image.my_image
+module.vm_instances["1"].yandex_compute_instance.vm[0]
+module.vpc_dev.yandex_vpc_network.this
+module.vpc_dev.yandex_vpc_subnet.this
+
+```
+`terraform plan`  
+![terraform plan](images/image25.png)
+
+`terraform apply` отработал корректно  
+ ![terraform apply](images/image26.png)
+
+Обнаружил, что можно использовать другой вариант создания instances, заменив `for_each`:  
+`  for_each = local.instance_params`
+Тогда `instance_params` должен быть `map`:  
+```
+locals {
+  instance_params = {
+    marketing = {
+      project_name   = "marketing"
+      labels         = { owner = "i.ivanov", project = "marketing" }
+      instance_count = 1
+      subnet_zones   = var.subnet_zones_marketing
+      subnet_ids     = [module.vpc_dev.subnet.id, yandex_vpc_subnet.develop_b.id]
+    },
+    analytics = {
+      project_name   = "analytics"
+      labels         = { owner = "p.petrov", project = "analytics" }
+      instance_count = 1
+      subnet_zones   = var.subnet_zones_marketing
+      subnet_ids     = [module.vpc_dev.subnet.id]
+    }
+  }
+}
+```
+и instances получаются такими:  
+```
+data.template_file.cloudinit
+yandex_vpc_subnet.develop_b
+module.vm_instances["analytics"].data.yandex_compute_image.my_image
+module.vm_instances["analytics"].yandex_compute_instance.vm[0]
+module.vm_instances["marketing"].data.yandex_compute_image.my_image
+module.vm_instances["marketing"].yandex_compute_instance.vm[0]
+module.vpc_dev.yandex_vpc_network.this
+module.vpc_dev.yandex_vpc_subnet.this
+```
