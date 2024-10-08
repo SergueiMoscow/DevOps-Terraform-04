@@ -37,3 +37,5 @@
 ![labels](images/image09.png)  
 `module.vm_instances[0]`  
 ![console](images/image10.png)  
+
+[Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/05f69029fd21f55a790c1ad27417e6e757d15655)
