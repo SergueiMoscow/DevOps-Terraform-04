@@ -4,7 +4,8 @@ output "instances" {
 
 output "vpc" {
   value = {
-    network = module.vpc_dev.network,
-    subnet = module.vpc_dev.subnet
+    network     = module.vpc.network,
+    subnet_ids  = module.vpc.subnet_ids
+    subnet_ones = module.vpc.subnet_zones
   }
 }

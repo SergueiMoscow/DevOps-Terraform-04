@@ -156,3 +156,27 @@ module.vm_instances["marketing"].yandex_compute_instance.vm[0]
 module.vpc_dev.yandex_vpc_network.this
 module.vpc_dev.yandex_vpc_subnet.this
 ```
+[Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/87ba1c23bf83b0d552a2d1583525363c04c6ba94)
+
+## [Задание 4*]
+[Subnet documentation](https://terraform-provider.yandexcloud.net/Resources/vpc_subnet)
+
+Меняем ресурс подсети в модуле  
+![resource subnet](images/image27.png)
+
+Создаём новую переменную, чтобы возвращала список id подсетей
+![output ids](images/image28.png)
+
+Также для списков зон, чтобы передать их модулю `vm_instances`  
+![output zones](images/image30.png)  
+
+`terraform plan`  
+![plan](images/image29.png)  
+
+`terraform apply`  
+![apply](images/image31.png)
+
+Смотрим подсети в web интерфейсе  
+![web](images/image32.png)
+
+Много мелких изменений в других файлах, которые можно увидеть в коммите.

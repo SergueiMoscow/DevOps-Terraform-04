@@ -1,57 +1,20 @@
-# #создаем облачную сеть
-# resource "yandex_vpc_network" "develop" {
-#   name = "develop"
-# }
-
-# #создаем подсеть
-# resource "yandex_vpc_subnet" "develop_a" {
-#   name           = "develop-ru-central1-a"
-#   zone           = "ru-central1-a"
-#   network_id     = yandex_vpc_network.develop.id
-#   v4_cidr_blocks = ["10.0.1.0/24"]
-# }
-
-module "vpc_dev" {
+module "vpc" {
      source      = "./modules/vpc"
-     network_name = "develop"
-     subnet_name  = "develop_a"
-     zone         = "ru-central1-a"
-     v4_cidr_block = "10.0.1.0/24"
+     env_name = "develop"
+     subnets = [
+      {zone = "ru-central1-a", cidr = "10.0.1.0/24"},
+      {zone = "ru-central1-b", cidr = "10.0.2.0/24"},
+     ]
    }
 
-
-resource "yandex_vpc_subnet" "develop_b" {
-  name           = "develop-ru-central1-b"
-  zone           = "ru-central1-b"
-  network_id     = module.vpc_dev.network.id
-  v4_cidr_blocks = ["10.0.2.0/24"]
-}
-
-# Добавляем переменные
-variable "subnet_zones_marketing" {
-  type        = list(string)
-  default     = ["ru-central1-a", "ru-central1-b"]
-  description = "https://cloud.yandex.ru/docs/overview/concepts/geo-scope"
-}
-
-# variable "instance_params" {
-#   type = list(object({
-#     project_name   = string
-#     labels         = map(string)
-#     instance_count = number
-#     subnet_zones   = list(string)
-#     subnet_ids     = list(string)
-#   }))
-# }
-
 module "vm_instances" {
-  for_each = { for idx, instance in local.instance_params : idx => instance }
+  for_each = local.instance_params
   source         = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
-  env_name       = each.value.project_name 
-  network_id     = module.vpc_dev.network.id
+  env_name       = each.key
+  network_id     = module.vpc.network.id
   subnet_zones   = each.value.subnet_zones
   subnet_ids     = each.value.subnet_ids
-  instance_name  = each.value.project_name
+  instance_name  = each.key
   instance_count = each.value.instance_count
   image_family   = var.image_family
   public_ip      = true
@@ -70,20 +33,19 @@ data "template_file" "cloudinit" {
 }
 
 locals {
-  instance_params = [
-    {
-      project_name   = "marketing"
+  instance_params = {
+    "marketing" = {
       labels         = { owner = "i.ivanov", project = "marketing" }
       instance_count = 1
-      subnet_zones   = var.subnet_zones_marketing
-      subnet_ids     = [module.vpc_dev.subnet.id, yandex_vpc_subnet.develop_b.id]
+      subnet_zones   = module.vpc.subnet_zones
+      subnet_ids     = module.vpc.subnet_ids
     },
-    {
+    "analytics" = {
       project_name   = "analytics"
       labels         = { owner = "p.petrov", project = "analytics" }
       instance_count = 1
-      subnet_zones   = var.subnet_zones_marketing
-      subnet_ids     = [module.vpc_dev.subnet.id]
+      subnet_zones   = module.vpc.subnet_zones
+      subnet_ids     = module.vpc.subnet_ids
     }
-  ]
+  }
 }

@@ -1,19 +1,13 @@
-variable "network_name" {
-  description = "The name of the network to be created"
-  type        = string
+variable "env_name" {
+  type = string
+  default = "undefined"
+  description = "base name for net and subnet(s)"
 }
 
-variable "subnet_name" {
-  description = "The name of the subnet to be created"
-  type        = string
-}
-
-variable "zone" {
-  description = "The zone in which to create the subnet"
-  type        = string
-}
-
-variable "v4_cidr_block" {
-  description = "The CIDR block for the subnet"
-  type        = string
+variable "subnets" {
+  description = "List of subnets with zones and CIDR blocks"
+  type = list(object({
+    zone = string
+    cidr = string
+  }))
 }

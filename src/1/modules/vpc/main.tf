@@ -8,12 +8,14 @@ terraform {
 }
 
 resource "yandex_vpc_network" "this" {
-  name = var.network_name
+  name = var.env_name
 }
 
+# Создание списка подсетей
 resource "yandex_vpc_subnet" "this" {
-  name           = var.subnet_name
-  zone           = var.zone
+  for_each = { for subnet in var.subnets : subnet.zone => subnet }
+  name           = "${var.env_name}-${each.key}"
+  zone           = each.value.zone
   network_id     = yandex_vpc_network.this.id
-  v4_cidr_blocks = [var.v4_cidr_block]
+  v4_cidr_blocks = [each.value.cidr]
 }
