@@ -179,4 +179,5 @@ module.vpc_dev.yandex_vpc_subnet.this
 Смотрим подсети в web интерфейсе  
 ![web](images/image32.png)
 
-Много мелких изменений в других файлах, которые можно увидеть в коммите.
+Много мелких изменений в других файлах, которые можно увидеть в [коммите](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/3b14f02f82ce9b79cc3bc130375dffb6e0083461).
+
