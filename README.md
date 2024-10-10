@@ -244,6 +244,8 @@ module.vpc_dev.yandex_vpc_subnet.this
 `terraform destroy` также показывает, что будет удалят оба хоста  
 ![destroy](images/image44.png)
 
+[Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/874e97660878d32339a44b41c2f44b3ebc1522e0)
+
 ## [Задание 6](tasks/task6.md)
 
 Копируем файлы из [примера](https://github.com/terraform-yc-modules/terraform-yc-s3/tree/master/examples/simple-bucket)
@@ -269,3 +271,5 @@ module "s3" {
 `terraform apply`  
 
 Ищем `access_key` и `secret_key` в `terraform.tfstate`, сохраняем.
+
+[Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/30f02f3e1a865ff71acd2161223dc30f1bc1f070)
