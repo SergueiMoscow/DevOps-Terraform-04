@@ -244,4 +244,28 @@ module.vpc_dev.yandex_vpc_subnet.this
 `terraform destroy` также показывает, что будет удалят оба хоста  
 ![destroy](images/image44.png)
 
+## [Задание 6](tasks/task6.md)
 
+Копируем файлы из [примера](https://github.com/terraform-yc-modules/terraform-yc-s3/tree/master/examples/simple-bucket)
+
+В [`versions.tf`](src/yc_s3_bucket/versions.tf) добавляем код:
+```terraform
+provider "yandex" {
+  token     = var.yc_token
+  zone      = var.default_zone
+}
+```
+
+[variables.tf](src/yc_s3_bucket/variables.tf) заполняем нужными переменными и прописываем их в `personal.auto.tfvars`  
+
+В [`main.tf`](src/yc_s3_bucket/main.tf) корректируем использование модуля  
+```terraform
+module "s3" {
+  source = "git::https://github.com/terraform-yc-modules/terraform-yc-s3.git"
+  bucket_name = "sergio"
+  folder_id = var.folder_id
+}
+```
+`terraform apply`  
+
+Ищем `access_key` и `secret_key` в `terraform.tfstate`, сохраняем.
