@@ -181,3 +181,25 @@ module.vpc_dev.yandex_vpc_subnet.this
 
 Много мелких изменений в других файлах, которые можно увидеть в [коммите](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/3b14f02f82ce9b79cc3bc130375dffb6e0083461).
 
+## [Задание 5](tasks/task5.md)
+
+[Документация](https://terraform-provider.yandexcloud.net/Resources/mdb_mysql_cluster)
+
+Создаём новый проект [cluster_db](src/cluster_db)  
+
+Копируем "постоянные" файлы `personal.auto.tfvars`, `providers.tf`, `variables.tf`  
+
+Создаём каталог [`modules/mysql`](src/cluster_mysql/modules/mysql/)  
+
+В нём создаём [`variables.tf`](src/cluster_mysql//modules/mysql/variables.tf), [`main.tf`](src/cluster_mysql/modules/mysql/main.tf)
+
+Запускаем `terraform plan` с `ha = false` (в [`main.tf`](src/cluster_mysql/main.tf)):
+
+в `terraform plan` видим один host  
+![plan 1](images/image33.png)
+
+Запускаем `terraform plan` с `ha = true` (в [`main.tf`](src/cluster_mysql/main.tf)):
+
+в `terraform plan` видим два hostа  
+![plan 1](images/image34.png)
+
