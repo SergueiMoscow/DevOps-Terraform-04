@@ -185,6 +185,7 @@ module.vpc_dev.yandex_vpc_subnet.this
 
 [Документация](https://terraform-provider.yandexcloud.net/Resources/mdb_mysql_cluster)
 
+#### 1. MySQL cluster
 Создаём новый проект [cluster_db](src/cluster_db)  
 
 Копируем "постоянные" файлы `personal.auto.tfvars`, `providers.tf`, `variables.tf`  
@@ -202,4 +203,45 @@ module.vpc_dev.yandex_vpc_subnet.this
 
 в `terraform plan` видим два hostа  
 ![plan 1](images/image34.png)
+
+#### 2. MySQL DB and user
+[Документация](https://registry.terraform.io/providers/yandex-cloud/yandex/latest/docs/resources/mdb_mysql_user)
+
+`terraform apply`  
+![error](images/image35.png)
+
+Имя пользователя `admin` использовать нельзя, меняем, запускаем `terraform apply`  
+![db_user created](images/image36.png)
+
+Проверяем `state`  
+![state](images/image37.png)
+
+#### 3. Добавить host в кластер
+
+Меняем переменные для задачи:  
+![variables change](images/image38.png)
+
+Запускаем  
+`terraform apply`
+
+Проверяем state  
+![state](images/image39.png)
+
+Меняем переменную  `ha = true`  
+
+`terraform plan` планирует создавать дополнительный host  
+![plan](images/image40.png)
+
+`terraform apply` отработал   
+![apply](images/image41.png)
+
+В `state` теперь 2 `hosts`  
+![state](images/image42.png)
+
+И в web версии появилась "2" в ресурсах  
+![web](images/image43.png)
+
+`terraform destroy` также показывает, что будет удалят оба хоста  
+![destroy](images/image44.png)
+
 

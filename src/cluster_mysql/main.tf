@@ -21,5 +21,5 @@ variable "env_name" {
 
 variable "cluster_name" {
   type    = string
-  default = "cluster0"
+  default = "example"
 }
