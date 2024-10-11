@@ -328,3 +328,4 @@ resource "vault_generic_secret" "vault_example2" {
 `terraform init -backend-config=backend.tfvars`  
 Затем `terraform plan` и `terraform apply` запускается уже без флага -backend-config, всё работает.
 
+[Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/56ec2929547e9519d059f9abc6618d75eab34b1f)
