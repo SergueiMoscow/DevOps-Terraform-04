@@ -279,3 +279,12 @@ module "s3" {
 Ищем `access_key` и `secret_key` в `terraform.tfstate`, сохраняем.
 
 [Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/30f02f3e1a865ff71acd2161223dc30f1bc1f070)
+
+## [Задание 7](tasks/task7.md)
+Создаём новый каталог [vault](src/vault/), копируем туда необходимые файлы из примера и корректируем.  
+Поднимаем контейнер с `vault`  
+Пишем туда ключ-значение  
+![vault webui](images/image46.png)
+
+Запускаем `terraform init`, `terraform apply`  
+![terraform apply](images/image47.png)
