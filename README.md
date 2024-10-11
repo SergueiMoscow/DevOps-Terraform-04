@@ -67,6 +67,11 @@
 
 [Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/f76ea5e88c71e825f3761bb618e42a6c185b5c10)
 
+#### Создаём документацию  
+`terraform-docs markdown modules/vpc`
+Копируем сгенерированный текст в файл [vpc.md](src/1/vpc.md)
+
+
 ## [Задание 3](tasks/task3.md)
 `terraform state list`  
 ```
