@@ -1,6 +1,14 @@
 
+# Для чтения значения
 data "vault_generic_secret" "vault_example" {
-  path = "secret/example"
+  path = var.secret_example_path
+}
+
+# Для записи
+resource "vault_generic_secret" "vault_example2" {
+  path = var.secret_example2_path
+
+  data_json = jsonencode(var.secret_example2_value)
 }
 
 output "vault_example" {

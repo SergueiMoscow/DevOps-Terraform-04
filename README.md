@@ -290,3 +290,21 @@ module "s3" {
 ![terraform apply](images/image47.png)  
 [Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/9144aa657d14e28372e21cc4feac5538a377f2a9)
 
+Исправляем hardcoded переменные  
+Добавляем блок кода в main.tf для создания новой записи в vault  
+```terraform
+# Для записи
+resource "vault_generic_secret" "vault_example2" {
+  path = var.secret_example2_path
+
+  data_json = jsonencode(var.secret_example2_value)
+}
+```
+Запускаем `terraform apply`  
+[terraform apply](images/image48.png)
+
+Прроверяем в web ui  
+![check webui](images/image49.png)
+
+
+## [Задание 8](tasks/task8.md)
