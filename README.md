@@ -308,3 +308,23 @@ resource "vault_generic_secret" "vault_example2" {
 
 
 ## [Задание 8](tasks/task8.md)
+[Документация terraform_remote_state yandex](https://yandex.cloud/ru/docs/tutorials/infrastructure-management/terraform-state-storage)
+
+Т.к. в задаче требуется раздлить проект, где используется vpc, то берём [проект с модулем vpc](src/1/)
+
+Для разворачивания нужно инициализировать переменные непосредственно в модуле, для этого создаём `personal.auto.tfvars` в папке с модулем.
+
+Также для полноценной работы модуля в качестве root не хватает информации о провайдере, поэтому копируем из корня проекта блок `providers` файла `providers.tf` и объявляем необходимые переменные в `variables.tf` и инициализируем в `personal.auto.tfvars`.  
+Здесь уже срабатывает `terrafrom plan` без ошибок.
+
+Теперь нужно добавить backend, чтобы использовать, например, Yandex bucket для стейта.
+
+С hardcoded значениями уже работает  
+![s3 bucket](images/image50.png)
+
+Вынесем все переменные в `backend.tfvars`, для примера содадим [`backend.tfvars.example`](src/1/modules/vpc/backend.tfvars.example)
+
+Запускаем так:
+`terraform init -backend-config=backend.tfvars`  
+Затем `terraform plan` и `terraform apply` запускается уже без флага -backend-config, всё работает.
+
