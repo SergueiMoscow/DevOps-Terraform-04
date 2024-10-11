@@ -287,4 +287,6 @@ module "s3" {
 ![vault webui](images/image46.png)
 
 Запускаем `terraform init`, `terraform apply`  
-![terraform apply](images/image47.png)
+![terraform apply](images/image47.png)  
+[Commit](https://github.com/SergueiMoscow/DevOps-Terraform-04/commit/9144aa657d14e28372e21cc4feac5538a377f2a9)
+
