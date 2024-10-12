@@ -8,8 +8,10 @@ terraform {
   backend "s3" {
     endpoints = {
       s3 = "https://storage.yandexcloud.net"
+      dynamodb = "https://docapi.serverless.yandexcloud.net/ru-central1/b1gs3dkkmirep8agd6af/etnjed6ke5hcskdlmods"
     }
 
+    dynamodb_table              = "develop_tfstate"
     skip_region_validation      = true
     skip_credentials_validation = true
     skip_requesting_account_id  = true # Необходимая опция Terraform для версии 1.6.1 и старше.
