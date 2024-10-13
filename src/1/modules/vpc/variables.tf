@@ -28,7 +28,3 @@ variable "subnets" {
     cidr = string
   }))
 }
-
-variable "bucket_info" {
-  type = map
-}

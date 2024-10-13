@@ -9,7 +9,7 @@ module "vpc" {
 
 module "vm_instances" {
   for_each = local.instance_params
-  source         = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
+  source         = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=0049a0c47c805c2552e16f7bca2581a7feae0f14"
   env_name       = each.key
   network_id     = module.vpc.network.id
   subnet_zones   = each.value.subnet_zones
