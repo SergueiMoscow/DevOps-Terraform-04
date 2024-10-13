@@ -1,7 +1,9 @@
+# tflint-ignore: terraform_unused_declarations
 variable access_key {
   type    = string
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable secret_key {
   type    = string
 }

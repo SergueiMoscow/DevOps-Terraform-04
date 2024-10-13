@@ -29,3 +29,8 @@ variable "ha" {  # High-Availability
   type        = bool
   default     = false
 }
+
+variable "security_group_ids" {
+  type        = list(string)
+  description = "https://yandex.cloud/ru/docs/vpc/concepts/security-groups"
+}

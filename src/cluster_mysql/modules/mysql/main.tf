@@ -12,6 +12,8 @@ resource "yandex_mdb_mysql_cluster" "this" {
   environment = var.mysql_environment
   network_id  = var.network_id
   version = "8.0"
+  security_group_ids = var.security_group_ids
+
 
   resources {
     resource_preset_id = "s2.micro"
